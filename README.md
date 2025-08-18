@@ -1,98 +1,303 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Session Authentication
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust NestJS application implementing session-based authentication with PostgreSQL database integration. This project provides user registration, login/logout functionality, and a complete CRUD system for user notes with proper authorization controls.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Session-based Authentication**: Secure authentication using express-session with PostgreSQL session store
+- **User Management**: Complete user registration and authentication system
+- **Notes CRUD**: Full Create, Read, Update, Delete operations for user notes
+- **Database Integration**: TypeORM with PostgreSQL for data persistence
+- **Security**: Password hashing with bcrypt, session management, and route protection
+- **Authorization**: User-specific data access with proper authorization guards
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: Passport.js with local strategy
+- **Session Management**: express-session with connect-pg-simple
+- **Password Security**: bcrypt
+- **Language**: TypeScript
+- **Testing**: Jest
 
-```bash
-$ npm install
+## Project Structure
+
+```
+src/
+├── auth/                    # Authentication module
+│   ├── dto/                 # Data transfer objects
+│   ├── auth.controller.ts   # Authentication endpoints
+│   ├── auth.service.ts      # Authentication business logic
+│   ├── auth.module.ts       # Authentication module configuration
+│   ├── local.strategy.ts    # Passport local strategy
+│   ├── session.serializer.ts # Session serialization
+│   ├── local-auth.guard.ts  # Local authentication guard
+│   └── authenticated.guard.ts # Route protection guard
+├── user/                    # User module
+│   ├── dto/                 # User DTOs
+│   ├── entities/            # User entity
+│   ├── user.controller.ts   # User endpoints
+│   ├── user.service.ts      # User business logic
+│   └── user.module.ts       # User module configuration
+├── note/                    # Notes module
+│   ├── dto/                 # Note DTOs
+│   ├── entities/            # Note entity
+│   ├── note.controller.ts   # Notes CRUD endpoints
+│   ├── note.service.ts      # Notes business logic
+│   └── note.module.ts       # Notes module configuration
+├── common/                  # Shared utilities
+│   └── baseEntity.ts        # Base entity with timestamps
+├── app.controller.ts        # Main application controller
+├── app.service.ts           # Main application service
+├── app.module.ts            # Root application module
+└── main.ts                  # Application bootstrap
 ```
 
-## Compile and run the project
+## Installation
 
+### Prerequisites
+
+- Node.js (v16 or higher)
+- PostgreSQL database
+- npm or yarn package manager
+
+### Setup
+
+1. **Clone the repository**
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/Nika-HISK/nest-session-auth
+cd nest-session-auth
 ```
 
-## Run tests
-
+2. **Install dependencies**
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+3. **Environment Configuration**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Create a `.env` file in the root directory with the following variables:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+DB_NAME=your_db_name
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Session Configuration
+SESSION_SECRET=your_secure_session_secret
+
+# Application Configuration
+PORT=3000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+4. **Database Setup**
 
-## Resources
+Ensure PostgreSQL is running and create the database specified in your `.env` file. The application will automatically create tables using TypeORM synchronization.
 
-Check out a few resources that may come in handy when working with NestJS:
+5. **Start the application**
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+# Development mode
+npm run start:dev
 
-## Support
+# Production mode
+npm run build
+npm run start:prod
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## API Endpoints
 
-## Stay in touch
+### Authentication
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Register User
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+```
+
+#### Login
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+}
+```
+
+#### Logout
+```http
+POST /auth/logout
+```
+
+### Notes (Authenticated Routes)
+
+All note endpoints require authentication via session cookies.
+
+#### Create Note
+```http
+POST /notes
+Content-Type: application/json
+
+{
+  "title": "My Note Title",
+  "content": "Note content here..."
+}
+```
+
+#### Get All User Notes
+```http
+GET /notes
+```
+
+#### Get Specific Note
+```http
+GET /notes/:id
+```
+
+#### Update Note
+```http
+PUT /notes/:id
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "content": "Updated content..."
+}
+```
+
+#### Delete Note
+```http
+DELETE /notes/:id
+```
+
+## Database Schema
+
+### Users Table
+- `id`: UUID (Primary Key)
+- `email`: String (Unique)
+- `password`: String (Hashed)
+- `firstName`: String
+- `lastName`: String
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
+- `deletedAt`: Timestamp (Soft Delete)
+
+### Notes Table
+- `id`: UUID (Primary Key)
+- `title`: String
+- `content`: Text
+- `userId`: UUID (Foreign Key)
+- `createdAt`: Timestamp
+- `updatedAt`: Timestamp
+- `deletedAt`: Timestamp (Soft Delete)
+
+### Session Table
+- Automatically created by connect-pg-simple
+- Stores session data in PostgreSQL
+
+## Security Features
+
+### Password Security
+- Passwords are hashed using bcrypt with salt rounds of 10
+- Plain text passwords are never stored in the database
+
+### Session Management
+- Sessions are stored in PostgreSQL using connect-pg-simple
+- Session cookies are HTTP-only for XSS protection
+- Configurable session expiration (default: 24 hours)
+- Secure cookie settings in production
+
+### Authorization
+- Route-level protection using `AuthenticatedGuard`
+- User-specific data access (users can only access their own notes)
+- Proper error handling for unauthorized access attempts
+
+## Development
+
+### Available Scripts
+
+```bash
+# Start development server with hot reload
+npm run start:dev
+
+# Build the application
+npm run build
+
+# Start production server
+npm run start:prod
+
+# Run tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run test coverage
+npm run test:cov
+
+# Run end-to-end tests
+npm run test:e2e
+
+# Lint and fix code
+npm run lint
+
+# Format code
+npm run format
+```
+
+### Code Quality
+
+The project includes:
+- ESLint for code linting
+- Prettier for code formatting
+- TypeScript for type safety
+
+## Configuration
+
+### CORS
+CORS is configured to allow requests from the frontend URL specified in environment variables with credentials enabled.
+
+### TypeORM
+Database synchronization is enabled in development mode. For production, consider using migrations instead.
+
+### Session Configuration
+- Session data is stored in PostgreSQL
+- Session cookies expire after 24 hours by default
+- Sessions are not saved if uninitialized
+- Sessions are not resaved if unchanged
+
+## Error Handling
+
+The application includes comprehensive error handling:
+- Validation errors for invalid input data
+- Authentication errors for invalid credentials
+- Authorization errors for accessing forbidden resources
+- Database errors with appropriate HTTP status codes
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and ensure they pass
+5. Submit a pull request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under UNLICENSED - see the package.json file for details.
