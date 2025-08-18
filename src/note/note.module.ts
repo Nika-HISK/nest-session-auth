@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { NoteService } from './note.service';
-import { NoteController } from './note.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { NotesService } from './note.service';
+import { NotesController } from './note.controller';
+import { Note } from './entities/note.entity';
 
 @Module({
-  controllers: [NoteController],
-  providers: [NoteService],
+  imports: [TypeOrmModule.forFeature([Note])],
+  controllers: [NotesController],
+  providers: [NotesService],
+  exports: [NotesModule],
 })
-export class NoteModule {}
+export class NotesModule {}

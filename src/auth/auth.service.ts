@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,12 +24,12 @@ export class AuthService {
   async register(createUserDto: CreateUserDto): Promise<User> {
     const { password, ...userData } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const user = this.userRepository.create({
       ...userData,
       password: hashedPassword,
     });
-    
+
     return this.userRepository.save(user);
   }
 
