@@ -297,7 +297,3 @@ The application includes comprehensive error handling:
 3. Make your changes
 4. Run tests and ensure they pass
 5. Submit a pull request
-
-## License
-
-This project is licensed under UNLICENSED - see the package.json file for details.
